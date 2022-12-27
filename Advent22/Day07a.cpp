@@ -3,6 +3,10 @@
 #include <iostream>
 #include <unordered_map>
 
+const std::string FILENAME = "Day07.txt";
+
+const int DIRECTORY_SIZE_LIMIT = 100000;
+
 enum LineType
 {
 	CdCommand,
@@ -14,12 +18,13 @@ enum LineType
 struct ParsedLine
 {
 	ParsedLine(LineType type, const std::string& path, int size = 0) : type(type), path(path), size(size) {}
+	
 	LineType type;
 	std::string path;	// Not for type LsCommand
 	int size;			// Only for type FileEntry
 };
 
-std::vector<ParsedLine> Parse(std::vector<std::string> lines)
+std::vector<ParsedLine> Parse(const std::vector<std::string>& lines)
 {
 	std::vector<ParsedLine> result;
 	
@@ -102,27 +107,9 @@ public:
 		for (auto& entry : _subDirectories)
 			result += entry.second->GetSummedSizeOfSmallDirectories();
 		int size = GetSize();
-		if (size <= 100000)
+		if (size <= DIRECTORY_SIZE_LIMIT)
 			result += size;
 		return result;
-	}
-
-	void Debug(int indentation = 0)
-	{
-		for (const auto& entry : _subDirectories)
-		{
-			for (int i = 0; i < indentation; i++)
-				std::cout << "  ";
-			std::cout << entry.first << " (dir)\n";
-			entry.second->Debug(indentation + 1);
-		}
-		
-		for (const auto& entry : _files)
-		{
-			for (int i = 0; i < indentation; i++)
-				std::cout << "  ";
-			std::cout << entry.first << " [" << entry.second << "]\n";
-		}
 	}
 };
 
@@ -164,10 +151,9 @@ Directory BuildDirectoryTree(const std::vector<ParsedLine> lines)
 
 int main()
 {
-	auto lines = AdventUtil::ReadFile("Day07.txt");
+	auto lines = AdventUtil::ReadFile(FILENAME);
 	auto parsedLines = Parse(lines);
 	auto rootDirectory = BuildDirectoryTree(parsedLines);
-	//rootDirectory.Debug();
 	auto result = rootDirectory.GetSummedSizeOfSmallDirectories();
 	std::cout << "Result: " << result << "\n";
 	return 0;

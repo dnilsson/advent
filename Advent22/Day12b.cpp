@@ -1,4 +1,5 @@
 #include "AdventUtil.h"
+
 #include <iostream>
 #include <queue>
 
@@ -93,15 +94,12 @@ int main()
 		positionsToProcess.pop();
 		int height = heights[position.x][position.y];
 		int distance = distances[position.x][position.y];
-		std::cout << "Processing position " << position.x << "," << position.y << " with a height of " 
-			<< height << " and a distance of " << distance << ".\n";
 
 		if (CanGoUp(heights, distances, position))
 		{
 			auto newPosition = GoUp(position);
 			distances[newPosition.x][newPosition.y] = distance + 1;
 			positionsToProcess.push(newPosition);
-			std::cout << "Can go up, pushing position " << newPosition.x << "," << newPosition.y << "\n";
 		}
 		
 		if (CanGoDown(heights, distances, position))
@@ -109,7 +107,6 @@ int main()
 			auto newPosition = GoDown(position);
 			distances[newPosition.x][newPosition.y] = distance + 1;
 			positionsToProcess.push(newPosition);
-			std::cout << "Can go down, pushing position " << newPosition.x << "," << newPosition.y << "\n";
 		}
 		
 		if (CanGoLeft(heights, distances, position))
@@ -117,7 +114,6 @@ int main()
 			auto newPosition = GoLeft(position);
 			distances[newPosition.x][newPosition.y] = distance + 1;
 			positionsToProcess.push(newPosition);
-			std::cout << "Can go left, pushing position " << newPosition.x << "," << newPosition.y << "\n";
 		}
 		
 		if (CanGoRight(heights, distances, position))
@@ -125,16 +121,12 @@ int main()
 			auto newPosition = GoRight(position);
 			distances[newPosition.x][newPosition.y] = distance + 1;
 			positionsToProcess.push(newPosition);
-			std::cout << "Can go right, pushing position " << newPosition.x << "," << newPosition.y << "\n";
 		}
-		
-		std::cout << "Queue length is now " << positionsToProcess.size() << "\n";
 	}	
 
 	int distanceToStart = distances[START_POSITION.x][START_POSITION.y];
-	std::cout << "Distance to start position is " << distanceToStart << ".\n";
-
 	int distanceToNearestZero = distanceToStart;
+
 	for (int y = 0; y < MAP_HEIGHT; y++)
 	{
 		for (int x = 0; x < MAP_WIDTH; x++)
@@ -147,5 +139,5 @@ int main()
 		}
 	}
 
-	std::cout << "Distance to nearest zero-elevation point is " << distanceToNearestZero << ".\n";	
+	std::cout << "Result: " << distanceToNearestZero << "\n";
 }

@@ -1,4 +1,5 @@
 #include "AdventUtil.h"
+
 #include <iostream>
 #include <algorithm>
 
@@ -6,8 +7,6 @@
 // Types and constants
 
 const std::string FILENAME = "Day13.txt";
-
-const int NUM_LIST_PAIRS = 150;
 
 enum TokenType { StartToken, EndToken, NumberToken, CommaToken };
 
@@ -132,16 +131,18 @@ int CompareSubLists(const Node& leftNode, const Node& rightNode)
 	return 0;
 }
 
+
 ///////////////////////////////////////////////////////////////////////////////
 // Main
 
 int main()
 {
 	auto lines = AdventUtil::ReadFile(FILENAME);
+	int numListPairs = (lines.size() + 1) / 3;
 	std::vector<Node> nodes;
 	std::vector<std::string> strings;
 	
-	for (int i = 0; i < NUM_LIST_PAIRS; i++)
+	for (int i = 0; i < numListPairs; i++)
 	{
 		{
 			auto line = lines[i * 3];
@@ -181,8 +182,6 @@ int main()
 		strings.push_back(line);
 	}
 	
-	std::cout << "Number of nodes: " << nodes.size() << "\n";
-
 	std::vector<int> sortedPositions;
 	for (int i = 0; i < nodes.size(); i++)
 		sortedPositions.push_back(i);
@@ -196,7 +195,6 @@ int main()
 		if (sortedPositions[a] == divider1Index)
 			break;
 	}
-	std::cout << "Found first divider at index " << a << "\n";
 
 	int b = 0;	
 	for (; b < sortedPositions.size(); b++)
@@ -204,8 +202,7 @@ int main()
 		if (sortedPositions[b] == divider2Index)
 			break;
 	}
-	std::cout << "Found second divider at index " << b << "\n";
 	
 	int decoderKey = (a + 1) * (b + 1);
-	std::cout << "Decoder key is: " << decoderKey << "\n";
+	std::cout << "Result: " << decoderKey << "\n";
 }

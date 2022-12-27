@@ -2,8 +2,9 @@
 
 #include <iostream>
 
-const int SIZE = 99;
-const char* FILENAME = "Day08.txt";
+const std::string FILENAME = "Day08.txt";
+
+const int FOREST_SIZE = 99;
 
 //////////////////////////////////////////////////////////////////////////////////////////
 
@@ -99,32 +100,32 @@ public:
 
 int main()
 {
-	Tree trees[SIZE][SIZE];
+	Tree trees[FOREST_SIZE][FOREST_SIZE];
 
 	auto lines = AdventUtil::ReadFile(FILENAME);
 
-	for (int y = 0; y < SIZE; y++)
+	for (int y = 0; y < FOREST_SIZE; y++)
 	{
 		const auto& line = lines[y];
-		for (int x = 0; x < SIZE; x++)
+		for (int x = 0; x < FOREST_SIZE; x++)
 		{
 			int height = line[x] - '0';
 			trees[x][y].SetHeight(height);
 	
 			trees[x][y].SetNeighbors(
 				y > 0 ? &(trees[x][y - 1]) : nullptr,
-				y < (SIZE - 1) ? &(trees[x][y + 1]) : nullptr,
+				y < (FOREST_SIZE - 1) ? &(trees[x][y + 1]) : nullptr,
 				x > 0 ? &(trees[x - 1][y]) : nullptr,
-				x < (SIZE - 1) ? &(trees[x + 1][y]) : nullptr
+				x < (FOREST_SIZE - 1) ? &(trees[x + 1][y]) : nullptr
 				);
 		}
 	}
 
 	int maxScenicScore = 0;
 	
-	for (int y = 0; y < SIZE; y++)
+	for (int y = 0; y < FOREST_SIZE; y++)
 	{
-		for (int x = 0; x < SIZE; x++)
+		for (int x = 0; x < FOREST_SIZE; x++)
 		{
 			int scenicScore = trees[x][y].GetScenicScore();
 			if (scenicScore > maxScenicScore)
@@ -133,6 +134,5 @@ int main()
 	}
 	
 	std::cout << "Result: " << maxScenicScore << "\n";
-
 	return 0;
 }

@@ -2,8 +2,9 @@
 
 #include <iostream>
 
-const int SIZE = 99;
-const char* FILENAME = "Day08.txt";
+const std::string FILENAME = "Day08.txt";
+
+const int FOREST_SIZE = 99;
 
 //////////////////////////////////////////////////////////////////////////////////////////
 
@@ -18,11 +19,6 @@ private:
 	Tree* _eastNeighbor = nullptr;
 
 	enum Visibility { Undecided, Invisible, Visible };
-	
-	Visibility _visibleFromNorth = Undecided;
-	Visibility _visibleFromSouth = Undecided;
-	Visibility _visibleFromWest = Undecided;
-	Visibility _visibleFromEast = Undecided;
 	
 public:
 	void SetHeight(int height)
@@ -50,70 +46,42 @@ public:
 
 	bool IsVisibleFromNorth()
 	{
-		if (_visibleFromNorth == Undecided)
+		for (Tree* neighbor = GetNorthNeighbor(); neighbor != nullptr; neighbor = neighbor->GetNorthNeighbor())
 		{
-			_visibleFromNorth = Visible;
-			for (Tree* neighbor = GetNorthNeighbor(); neighbor != nullptr; neighbor = neighbor->GetNorthNeighbor())
-			{
-				if (neighbor->GetHeight() >= _height)
-				{
-					_visibleFromNorth = Invisible;
-					break;
-				}
-			}
+			if (neighbor->GetHeight() >= _height)
+				return false;
 		}
-		return _visibleFromNorth == Visible;
+		return true;
 	}
 
 	bool IsVisibleFromSouth()
 	{
-		if (_visibleFromSouth == Undecided)
+		for (Tree* neighbor = GetSouthNeighbor(); neighbor != nullptr; neighbor = neighbor->GetSouthNeighbor())
 		{
-			_visibleFromSouth = Visible;
-			for (Tree* neighbor = GetSouthNeighbor(); neighbor != nullptr; neighbor = neighbor->GetSouthNeighbor())
-			{
-				if (neighbor->GetHeight() >= _height)
-				{
-					_visibleFromSouth = Invisible;
-					break;
-				}
-			}
+			if (neighbor->GetHeight() >= _height)
+				return false;
 		}
-		return _visibleFromSouth == Visible;
+		return true;
 	}
 
 	bool IsVisibleFromWest()
 	{
-		if (_visibleFromWest == Undecided)
+		for (Tree* neighbor = GetWestNeighbor(); neighbor != nullptr; neighbor = neighbor->GetWestNeighbor())
 		{
-			_visibleFromWest = Visible;
-			for (Tree* neighbor = GetWestNeighbor(); neighbor != nullptr; neighbor = neighbor->GetWestNeighbor())
-			{
-				if (neighbor->GetHeight() >= _height)
-				{
-					_visibleFromWest = Invisible;
-					break;
-				}
-			}
+			if (neighbor->GetHeight() >= _height)
+				return false;
 		}
-		return _visibleFromWest == Visible;
+		return true;
 	}
 
 	bool IsVisibleFromEast()
 	{
-		if (_visibleFromEast == Undecided)
+		for (Tree* neighbor = GetEastNeighbor(); neighbor != nullptr; neighbor = neighbor->GetEastNeighbor())
 		{
-			_visibleFromEast = Visible;
-			for (Tree* neighbor = GetEastNeighbor(); neighbor != nullptr; neighbor = neighbor->GetEastNeighbor())
-			{
-				if (neighbor->GetHeight() >= _height)
-				{
-					_visibleFromEast = Invisible;
-					break;
-				}
-			}
+			if (neighbor->GetHeight() >= _height)
+				return false;
 		}
-		return _visibleFromEast == Visible;
+		return true;
 	}
 	
 	bool IsVisible()
@@ -126,41 +94,38 @@ public:
 
 int main()
 {
-	Tree trees[SIZE][SIZE];
+	Tree trees[FOREST_SIZE][FOREST_SIZE];
 
 	auto lines = AdventUtil::ReadFile(FILENAME);
 
-	for (int y = 0; y < SIZE; y++)
+	for (int y = 0; y < FOREST_SIZE; y++)
 	{
 		const auto& line = lines[y];
-		for (int x = 0; x < SIZE; x++)
+		for (int x = 0; x < FOREST_SIZE; x++)
 		{
 			int height = line[x] - '0';
 			trees[x][y].SetHeight(height);
 	
 			trees[x][y].SetNeighbors(
 				y > 0 ? &(trees[x][y - 1]) : nullptr,
-				y < (SIZE - 1) ? &(trees[x][y + 1]) : nullptr,
+				y < (FOREST_SIZE - 1) ? &(trees[x][y + 1]) : nullptr,
 				x > 0 ? &(trees[x - 1][y]) : nullptr,
-				x < (SIZE - 1) ? &(trees[x + 1][y]) : nullptr
+				x < (FOREST_SIZE - 1) ? &(trees[x + 1][y]) : nullptr
 				);
 		}
 	}
 
 	int visibleCount = 0;
 	
-	for (int y = 0; y < SIZE; y++)
+	for (int y = 0; y < FOREST_SIZE; y++)
 	{
-		for (int x = 0; x < SIZE; x++)
+		for (int x = 0; x < FOREST_SIZE; x++)
 		{
-			std::cout << (trees[x][y].IsVisible() ? "1" : "0");
 			if (trees[x][y].IsVisible())
 				visibleCount++;
 		}
-		std::cout << "\n";
 	}
 	
 	std::cout << "Result: " << visibleCount << "\n";
-
 	return 0;
 }

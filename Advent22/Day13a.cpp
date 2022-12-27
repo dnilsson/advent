@@ -1,4 +1,5 @@
 #include "AdventUtil.h"
+
 #include <iostream>
 #include <algorithm>
 
@@ -6,8 +7,6 @@
 // Types and constants
 
 const std::string FILENAME = "Day13.txt";
-
-const int NUM_LIST_PAIRS = 150;
 
 enum TokenType { StartToken, EndToken, NumberToken, CommaToken };
 
@@ -58,15 +57,6 @@ std::vector<Token> Tokenize(const std::string& line)
 	return result;
 }
 
-void DebugTokens(const std::vector<Token>& tokens)
-{
-	for (const auto& token : tokens)
-	{
-		std::cout << token.type << ", " << token.value << "\n";
-	}
-	std::cout << "---- END --------------------------------\n";
-}
-
 Node Parse(const std::vector<Token>& tokens, int& position)
 {
 	Node result{ SubListNode, 0 };
@@ -74,7 +64,6 @@ Node Parse(const std::vector<Token>& tokens, int& position)
 	
 	while (tokens[position].type != EndToken)
 	{
-		//std::cout << "Parsing position " << position << " of " << tokens.size() << "\n";
 		if (tokens[position].type == NumberToken)
 		{
 			result.subNodes.push_back(Node({ NumberNode, tokens[position].value }));
@@ -94,23 +83,10 @@ Node Parse(const std::vector<Token>& tokens, int& position)
 	return result;
 }
 
-void DebugNode(const Node& node, int indent = 0)
-{
-	for (int i = 0; i < indent; i++)
-		std::cout << "  ";
-	std::cout << node.type << ", "  << node.value << "\n";
-	
-	for (const Node& node : node.subNodes)
-		DebugNode(node, indent + 1);
-	if (indent == 0)
-		std::cout << "---- END --------------------------------\n";
-}
-
 // Returns 1 if the left list is the greater, -1 if the right list is the greater, and 0 if they are equal
 int CompareSubLists(const Node& leftNode, const Node& rightNode)
 {
 	auto size = std::max(leftNode.subNodes.size(), rightNode.subNodes.size());
-	//std::cout << "Left size: " << leftNode.subNodes.size() << ",  Right size: " << rightNode.subNodes.size() << "\n";
 	for (int i = 0; i < size; i++)
 	{
 		if (i >= leftNode.subNodes.size())
@@ -162,18 +138,17 @@ int CompareSubLists(const Node& leftNode, const Node& rightNode)
 int main()
 {
 	auto lines = AdventUtil::ReadFile(FILENAME);
+	int numListPairs = (lines.size() + 1) / 3;
 	std::vector<Node> leftNodes;
 	std::vector<Node> rightNodes;
 	
-	for (int i = 0; i < NUM_LIST_PAIRS; i++)
+	for (int i = 0; i < numListPairs; i++)
 	{
 		{
 			auto line = lines[i * 3];
 			auto tokens = Tokenize(line);		
-			//DebugTokens(tokens);
 			int pos = 0;
 			auto node = Parse(tokens, pos);
-			//DebugNode(node);
 			leftNodes.push_back(node);
 		}		
 		{
@@ -181,26 +156,17 @@ int main()
 			auto tokens = Tokenize(line);
 			int pos = 0;
 			auto node = Parse(tokens, pos);
-			//DebugNode(node);
 			rightNodes.push_back(node);
 		}
 	}
 
-	//std::cout << "Number of left nodes: " << leftNodes.size() << "\n";
-	//std::cout << "Number of right nodes: " << rightNodes.size() << "\n";
-	
 	int correctOrderIndiceSum = 0;
 	
-	for (int i = 0; i < NUM_LIST_PAIRS; i++)
+	for (int i = 0; i < numListPairs; i++)
 	{
-		//std::cout << "Comparing pairs: " << i << "\n";
-		//std::cout << "Left list ------------------------\n";
-		//DebugNode(leftNodes[i]);
-		//std::cout << "Right list ------------------------\n";
-		//DebugNode(rightNodes[i]);
 		if (CompareSubLists(leftNodes[i], rightNodes[i]) < 0)
 			correctOrderIndiceSum += (i + 1);
 	}
 	
-	std::cout << "Indice sum of correctly ordered pairs: " << correctOrderIndiceSum << "\n";
+	std::cout << "Result: " << correctOrderIndiceSum << "\n";
 }

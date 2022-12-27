@@ -2,13 +2,9 @@
 #include <vector>
 
 ///////////////////////////////////////////////////////////////////////////////
-// Constants
+// Constants and types
 
 const int NUM_ROUNDS = 10000;
-
-
-///////////////////////////////////////////////////////////////////////////////
-// Item class
 
 class Item
 {
@@ -50,14 +46,13 @@ public:
 
 
 ///////////////////////////////////////////////////////////////////////////////
-// Constants
+// Helper functions
 
 std::vector<std::vector<Item>> InitializeItems()
 {
-	std::vector<std::vector<Item>> items;
-	
-	// Real data
 	std::vector<int> divisors = { 11, 3, 5, 7, 19, 2, 13, 17 };	
+	std::vector<std::vector<Item>> items;
+
 	items.push_back({
 		Item(divisors, 56),
 		Item(divisors, 52),
@@ -111,36 +106,7 @@ std::vector<std::vector<Item>> InitializeItems()
 		Item(divisors, 58)
 		});
 
-	// Test data
-	/*
-	std::vector<int> divisors = { 23, 19, 13, 17 };
-	items.push_back({
-		Item(divisors, 79),
-		Item(divisors, 98)
-		});
-	items.push_back({
-		Item(divisors, 54),
-		Item(divisors, 65),
-		Item(divisors, 75),
-		Item(divisors, 74)
-		});
-	items.push_back({
-		Item(divisors, 79),
-		Item(divisors, 60),
-		Item(divisors, 97)
-		});
-	items.push_back({
-		Item(divisors, 74)
-		});
-	*/
-
 	return items;
-}
-
-void DebugNumInspects(const std::vector<int>& numInspects)
-{
-	for (int monkeyNo = 0; monkeyNo < numInspects.size(); monkeyNo++)
-		std::cout << "Monkey " << monkeyNo << " inspected items " << numInspects[monkeyNo] << " times.\n";
 }
 
 void ProcessMonkey(std::vector<std::vector<Item>>& items, int monkeyNo, 
@@ -161,7 +127,6 @@ void ProcessMonkey(std::vector<std::vector<Item>>& items, int monkeyNo,
 
 void ProcessMonkeys(std::vector<std::vector<Item>>& items, std::vector<int>& numInspects)
 {
-	// Real code
 	numInspects[0] += items[0].size();
 	ProcessMonkey(items, 0, [](Item& item){ item.Multiply(17); }, 11, 2, 3);
 	numInspects[1] += items[1].size();
@@ -178,18 +143,6 @@ void ProcessMonkeys(std::vector<std::vector<Item>>& items, std::vector<int>& num
 	ProcessMonkey(items, 6, [](Item& item){ item.Add(8); }, 13, 4, 0 );
 	numInspects[7] += items[7].size();
 	ProcessMonkey(items, 7, [](Item& item){ item.Add(6); }, 17, 1, 5 );
-		
-	// Test code
-	/*
-	numInspects[0] += items[0].size();
-	ProcessMonkey(items, 0, [](Item& item){ item.Multiply(19); }, "multiplied by 19", 23, 2, 3);
-	numInspects[1] += items[1].size();
-	ProcessMonkey(items, 1, [](Item& item){ item.Add(6); }, "increased by 6", 19, 2, 0 );
-	numInspects[2] += items[2].size();
-	ProcessMonkey(items, 2, [](Item& item){ item.Square(); }, "multiplied by itself", 13, 1, 3 );
-	numInspects[3] += items[3].size();
-	ProcessMonkey(items, 3, [](Item& item){ item.Add(3); }, "increased by 3", 17, 0, 1 );
-	*/
 }
 
 
@@ -205,16 +158,7 @@ int main()
 		numInspects.push_back(0);
 
 	for (int round = 0; round < NUM_ROUNDS; round++)
-	{
 		ProcessMonkeys(items, numInspects);
-
-		if (round == 0 || round == 19 || (round + 1) % 1000 == 0)
-		{
-			std::cout << "== After round " << (round + 1) << " ==\n";
-			DebugNumInspects(numInspects);
-			std::cout << "\n";
-		}
-	}
 
 	int max1 = 0;
 	int max2 = 0;
@@ -232,5 +176,5 @@ int main()
 	}
 	
 	long result = (long)max1 * max2;	
-	std::cout << "Level of monkey business: " << result << "\n";
+	std::cout << "Result: " << result << "\n";
 }

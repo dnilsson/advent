@@ -1,4 +1,5 @@
 #include "AdventUtil.h"
+
 #include <iostream>
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -16,6 +17,7 @@ struct Instruction
 	OpCode opCode;
 	int operand;	// Only for Addx
 };
+
 
 ///////////////////////////////////////////////////////////////////////////////
 // Parsing
@@ -40,6 +42,7 @@ std::vector<Instruction> ParseInstructions(const std::vector<std::string>& lines
 	
 	return result;
 }
+
 
 ///////////////////////////////////////////////////////////////////////////////
 // "Computer"
@@ -97,8 +100,6 @@ public:
 int main()
 {
 	auto lines = AdventUtil::ReadFile(FILENAME);
-	std::cout << "Number of lines read: " << lines.size() << "\n";
-
 	auto instructions = ParseInstructions(lines);
 
 	Computer computer(instructions);
@@ -110,21 +111,16 @@ int main()
 	while (!computer.IsFinished())
 	{
 		cycleNo++;
-		std::cout << "Cycle no: " << cycleNo << ";  Value during: " << computer.GetCurrentValue() << "\n";
 
 		cyclesUntilReadout--;
 		if (!cyclesUntilReadout)
 		{
-			std::cout << "***READOUT" << "\n";
 			accumulatedStrength += cycleNo * computer.GetCurrentValue();
 			cyclesUntilReadout = READOUT_CYCLE_INTERVAL;
 		}
 
 		computer.Tick();
-		std::cout << "Cycle no: " << cycleNo << ";  Value after: " << computer.GetCurrentValue() << "\n";
-
 	}
 
-	std::cout << "Execution finished after " << cycleNo << " cycles.\n";
 	std::cout << "Result: " << accumulatedStrength << "\n";
 }

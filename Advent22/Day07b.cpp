@@ -3,6 +3,11 @@
 #include <iostream>
 #include <unordered_map>
 
+const std::string FILENAME = "Day07.txt";
+
+const int DISK_SIZE = 70000000;
+const int SPACE_NEEDED = 30000000;
+
 enum LineType
 {
 	CdCommand,
@@ -19,7 +24,7 @@ struct ParsedLine
 	int size;			// Only for type FileEntry
 };
 
-std::vector<ParsedLine> Parse(std::vector<std::string> lines)
+std::vector<ParsedLine> Parse(const std::vector<std::string>& lines)
 {
 	std::vector<ParsedLine> result;
 	
@@ -111,24 +116,6 @@ public:
 		
 		return result;
 	}
-
-	void Debug(int indentation = 0)
-	{
-		for (const auto& entry : _subDirectories)
-		{
-			for (int i = 0; i < indentation; i++)
-				std::cout << "  ";
-			std::cout << entry.first << " (dir)\n";
-			entry.second->Debug(indentation + 1);
-		}
-		
-		for (const auto& entry : _files)
-		{
-			for (int i = 0; i < indentation; i++)
-				std::cout << "  ";
-			std::cout << entry.first << " [" << entry.second << "]\n";
-		}
-	}
 };
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -169,18 +156,14 @@ Directory BuildDirectoryTree(const std::vector<ParsedLine> lines)
 
 int main()
 {
-	auto lines = AdventUtil::ReadFile("Day07.txt");
+	auto lines = AdventUtil::ReadFile(FILENAME);
 	auto parsedLines = Parse(lines);
 	auto rootDirectory = BuildDirectoryTree(parsedLines);
 	
-	int unusedSpace = 70000000 - rootDirectory.GetSize();
-	std::cout << "Unused space: " << unusedSpace << "\n";
-	
-	int neededSpace = 30000000 - unusedSpace;
-	std::cout << "Needed extra space: " << neededSpace << "\n";
-	
-	int closestSize = rootDirectory.GetClosestBiggerDirectorySize(neededSpace);
-	std::cout << "Closest size: " << closestSize << "\n";
-	
+	int unusedSpace = DISK_SIZE - rootDirectory.GetSize();
+	int additionalSpaceNeeded = SPACE_NEEDED - unusedSpace;
+	int closestDirectorySize = rootDirectory.GetClosestBiggerDirectorySize(additionalSpaceNeeded);
+
+	std::cout << "Result: " << closestDirectorySize << "\n";
 	return 0;
 }

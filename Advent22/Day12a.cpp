@@ -1,4 +1,5 @@
 #include "AdventUtil.h"
+
 #include <iostream>
 #include <queue>
 
@@ -67,6 +68,7 @@ Position GoDown(const Position& position) { return { position.x, position.y + 1 
 Position GoLeft(const Position& position) { return { position.x - 1, position.y }; }
 Position GoRight(const Position& position) { return { position.x + 1, position.y }; }
 
+
 ///////////////////////////////////////////////////////////////////////////////
 // Main
 
@@ -92,15 +94,12 @@ int main()
 		positionsToProcess.pop();
 		int height = heights[position.x][position.y];
 		int distance = distances[position.x][position.y];
-		std::cout << "Processing position " << position.x << "," << position.y << " with a height of " 
-			<< height << " and a distance of " << distance << ".\n";
 
 		if (CanGoUp(heights, distances, position))
 		{
 			auto newPosition = GoUp(position);
 			distances[newPosition.x][newPosition.y] = distance + 1;
 			positionsToProcess.push(newPosition);
-			std::cout << "Can go up, pushing position " << newPosition.x << "," << newPosition.y << "\n";
 		}
 		
 		if (CanGoDown(heights, distances, position))
@@ -108,7 +107,6 @@ int main()
 			auto newPosition = GoDown(position);
 			distances[newPosition.x][newPosition.y] = distance + 1;
 			positionsToProcess.push(newPosition);
-			std::cout << "Can go down, pushing position " << newPosition.x << "," << newPosition.y << "\n";
 		}
 		
 		if (CanGoLeft(heights, distances, position))
@@ -116,7 +114,6 @@ int main()
 			auto newPosition = GoLeft(position);
 			distances[newPosition.x][newPosition.y] = distance + 1;
 			positionsToProcess.push(newPosition);
-			std::cout << "Can go left, pushing position " << newPosition.x << "," << newPosition.y << "\n";
 		}
 		
 		if (CanGoRight(heights, distances, position))
@@ -124,11 +121,9 @@ int main()
 			auto newPosition = GoRight(position);
 			distances[newPosition.x][newPosition.y] = distance + 1;
 			positionsToProcess.push(newPosition);
-			std::cout << "Can go right, pushing position " << newPosition.x << "," << newPosition.y << "\n";
 		}
 		
-		std::cout << "Queue length is now " << positionsToProcess.size() << "\n";
 	}	
 
-	std::cout << "Distance to end position is " << distances[END_POSITION.x][END_POSITION.y] << ".\n";
+	std::cout << "Result: " << distances[END_POSITION.x][END_POSITION.y] << "\n";
 }

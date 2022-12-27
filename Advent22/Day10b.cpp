@@ -1,4 +1,5 @@
 #include "AdventUtil.h"
+
 #include <iostream>
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -15,6 +16,7 @@ struct Instruction
 	OpCode opCode;
 	int operand;	// Only for Addx
 };
+
 
 ///////////////////////////////////////////////////////////////////////////////
 // Parsing
@@ -39,6 +41,7 @@ std::vector<Instruction> ParseInstructions(const std::vector<std::string>& lines
 	
 	return result;
 }
+
 
 ///////////////////////////////////////////////////////////////////////////////
 // "Computer"
@@ -89,6 +92,7 @@ public:
 	}
 };
 
+
 ///////////////////////////////////////////////////////////////////////////////
 // Pixel check
 
@@ -98,15 +102,15 @@ bool IsPixelLit(int cycleNo, int computerOutput)
 	return (std::abs(column - computerOutput) < 2);
 }
 
+
 ///////////////////////////////////////////////////////////////////////////////
 // Main
 
 int main()
 {
 	auto lines = AdventUtil::ReadFile(FILENAME);
-	std::cout << "Number of lines read: " << lines.size() << "\n";
-
 	auto instructions = ParseInstructions(lines);
+	
 	Computer computer(instructions);
 	int cycleNo = 0;
 	
@@ -120,6 +124,4 @@ int main()
 		if (cycleNo % CRT_WIDTH == 0)
 			std::cout << "\n";
 	}
-
-	std::cout << "\nExecution finished after " << cycleNo << " cycles.\n";
 }
